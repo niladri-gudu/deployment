@@ -5,9 +5,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "lint": "eslint .",
+    "dev": "tsx watch src/server.ts",
+    "dev:worker": "tsx watch src/workers/task.worker.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "start:worker": "node dist/workers/task.worker.js",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
     "test": "node --test",
     "postinstall": "prisma skills sync || exit 0"
   },
