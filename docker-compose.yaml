@@ -24,8 +24,6 @@ services:
       context: .
       dockerfile: Dockerfile
 
-    container_name: taskflow-worker
-
     command: ["node", "dist/src/workers/task.worker.js"]
 
     environment:
