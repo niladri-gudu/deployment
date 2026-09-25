@@ -41,3 +41,11 @@ export async function getTask(taskId: string) {
     },
   });
 }
+
+export async function listTasks(limit = 20, cursor?: string) {
+  return prisma.task.findMany({
+    take: Math.min(limit, 100),
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    orderBy: { createdAt: "desc" },
+  });
+}

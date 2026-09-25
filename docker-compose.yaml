@@ -9,22 +9,26 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/taskflow
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      PG_POOL_MAX: 20
 
     deploy:
       resources:
         limits:
           cpus: "0.5"
+          memory: 512M
 
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4000/ready"]
       interval: 5s
       timeout: 3s
-      retries: 3
+      retries: 5
       start_period: 10s
 
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
   worker:
     build:
@@ -37,10 +41,20 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/taskflow
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      PG_POOL_MAX: 10
+      WORKER_CONCURRENCY: 2
+
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
 
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
   postgres:
     image: postgres:16-alpine
@@ -58,6 +72,13 @@ services:
     volumes:
       - taskflow-postgres-data:/var/lib/postgresql/data
 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d taskflow"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
   redis:
     image: redis:7-alpine
 
@@ -70,6 +91,13 @@ services:
 
     volumes:
       - taskflow-redis-data:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
 
   nginx:
     image: nginx:alpine

@@ -1,19 +1,19 @@
 {
-  "name": "deployment",
+  "name": "taskflow",
   "version": "1.0.0",
-  "description": "Express application",
-  "main": "index.js",
+  "description": "TaskFlow - async task queue API for AWS scaling labs",
+  "main": "dist/src/server.js",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "dev:worker": "tsx watch src/workers/task.worker.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "start:worker": "node dist/workers/task.worker.js",
+    "start": "node dist/src/server.js",
+    "start:worker": "node dist/src/workers/task.worker.js",
     "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
     "db:generate": "prisma generate",
-    "test": "node --test",
-    "postinstall": "prisma skills sync || exit 0"
+    "test": "node --test"
   },
   "keywords": [],
   "author": "",

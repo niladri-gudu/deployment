@@ -1,0 +1,38 @@
+{
+  "family": "taskflow-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "containerDefinitions": [
+    {
+      "name": "taskflow-api",
+      "image": "000000000000.dkr.ecr.us-east-1.localhost:4566/taskflow-api:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 4000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "4000"
+        },
+        {
+          "name": "DATABASE_URL",
+          "value": "postgresql://postgres:postgres@postgres:5432/taskflow"
+        },
+        {
+          "name": "REDIS_HOST",
+          "value": "redis"
+        },
+        {
+          "name": "REDIS_PORT",
+          "value": "6379"
+        }
+      ]
+    }
+  ]
+}

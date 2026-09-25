@@ -6,4 +6,8 @@ export const redis = new Redis({
   port: env.REDIS_PORT,
   password: env.REDIS_PASSWORD || undefined,
   maxRetriesPerRequest: null,
+  enableReadyCheck: true,
+  retryStrategy: (t) => Math.min(t * 100, 3000),
 });
+
+redis.on("error", (e) => console.error("redis", e.message));
