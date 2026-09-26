@@ -8,6 +8,7 @@ const envSchema = z.object({
   REDIS_HOST: z.string().default("localhost"),
   REDIS_PORT: z.coerce.number().default(6379),
   REDIS_PASSWORD: z.string().optional(),
+  REDIS_TLS: z.coerce.boolean().default(false),
   PG_POOL_MAX: z.coerce.number().default(20),
   WORKER_CONCURRENCY: z.coerce.number().default(1),
 });
